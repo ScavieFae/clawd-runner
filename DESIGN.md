@@ -31,13 +31,12 @@ The game exists to make waiting pleasant, not to demand attention. It should fee
 ### The Clawd Sprite
 
 ```
-▗█▀▀█▖
-█ ▀▀ █   <- eyes (the ▀▀)
-█▄▄▄▄█
-▀   ▀    <- alternating feet
+▗█▀█▀█▖
+ █▅█▅█    <- eyes (the ▅▅ gaps)
+  ▀ ▀     <- alternating feet
 ```
 
-6x4 character cells. Claude's brand salmon (#D97757). The eyes give it personality without complexity.
+7x3 character cells. Claude's brand salmon (#D97757). The eyes are gaps at the top of the ▅ blocks—minimal and expressive.
 
 ### Current Obstacles
 

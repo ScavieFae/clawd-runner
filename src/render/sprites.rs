@@ -10,36 +10,33 @@ pub const DARK_COLOR: Color = Color::Rgb(45, 45, 42); // #2D2D2A
 pub const GROUND_COLOR: Color = Color::Rgb(138, 138, 122); // #8A8A7A
 
 /// Clawd sprite frames - the Claude Code mascot
-/// 6 chars wide, 4 lines tall
+/// 7 chars wide, 3 lines tall
 pub struct ClaudeSprite;
 
 impl ClaudeSprite {
-    /// Running frame 1 - left foot forward
+    /// Running frame 1 - feet together
     pub const FLOATING_1: &'static [&'static str] = &[
-        "▗█▀▀█▖",
-        "█ ▀▀ █",
-        "█▄▄▄▄█",
-        "▀   ▀ ",
+        "▗█▀█▀█▖",
+        " █▅█▅█ ",
+        "  ▀ ▀  ",
     ];
 
-    /// Running frame 2 - right foot forward
+    /// Running frame 2 - feet apart
     pub const FLOATING_2: &'static [&'static str] = &[
-        "▗█▀▀█▖",
-        "█ ▀▀ █",
-        "█▄▄▄▄█",
-        " ▀   ▀",
+        "▗█▀█▀█▖",
+        " █▅█▅█ ",
+        " ▀   ▀ ",
     ];
 
     /// Jumping - feet tucked/hidden
     pub const BOOSTING: &'static [&'static str] = &[
-        "▗█▀▀█▖",
-        "█ ▀▀ █",
-        "█▄▄▄▄█",
-        "      ",
+        "▗█▀█▀█▖",
+        " █▅█▅█ ",
+        "       ",
     ];
 
-    pub const WIDTH: u16 = 6;
-    pub const HEIGHT: u16 = 4;
+    pub const WIDTH: u16 = 7;
+    pub const HEIGHT: u16 = 3;
 }
 
 /// Obstacle types with their sprites

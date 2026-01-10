@@ -3,10 +3,9 @@
 A Chrome dino-style endless runner for Claude Code's compaction wait screen. Built in Rust with ratatui.
 
 ```
-▗█▀▀█▖
-█ ▀▀ █
-█▄▄▄▄█
-▀   ▀
+▗█▀█▀█▖
+ █▅█▅█
+  ▀ ▀
 ```
 
 ## Install
