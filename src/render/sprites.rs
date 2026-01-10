@@ -35,10 +35,10 @@ impl ClaudeSprite {
         "       ",
     ];
 
-    /// Ducking - compressed to 2 lines
+    /// Ducking - compressed to 2 lines, eyes looking up
     pub const DUCKING: &'static [&'static str] = &[
-        "▗█▅█▅█▖",
-        "  ▀ ▀  ",
+        "▗█▛█▜█▖",
+        " ▀▔▔▔▀ ",
     ];
 
     /// Landing squash - wider and shorter
