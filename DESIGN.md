@@ -20,35 +20,70 @@ The game exists to make waiting pleasant, not to demand attention. It should fee
 
 | Component | Status | Notes |
 |-----------|--------|-------|
-| Core loop | Done | ~30fps, inline terminal rendering |
+| Core loop | Done | ~30fps, terminal rendering |
 | Player physics | Done | Gravity, jump velocity, ground detection |
-| Obstacles | Done | Small, Tall, Double variants |
+| Obstacles | Done | Small, Tall, Double, Flying variants |
 | Collision | Done | AABB with forgiving hitboxes |
 | Scoring | Done | +1/frame + 10 bonus per obstacle cleared |
-| Animation | Basic | 2-frame run cycle, feet tucked on jump |
+| Run animation | Done | 2-frame cycle, feet in/out |
+| Jump animation | Done | Feet tuck in air |
+| Landing squash | Done | 6-frame feet-tucked on landing |
+| Duck mechanic | Done | Toggle duck, 2-frame waddle animation |
+| Flying obstacles | Done | Appear at 1500+ score, duck to avoid |
+| Milestone flash | Done | Score flashes at 100, 500, 1000, etc. |
+| Obstacle curve | Done | Gradual introduction by score |
 | Hook integration | Done | PreCompact launches game in new Terminal |
 
 ### The Clawd Sprite
 
+**Running** (2 frames, feet alternate in/out):
 ```
-▗█▀█▀█▖
- █▅█▅█    <- eyes (the ▅▅ gaps)
-  ▀ ▀     <- alternating feet
+▗█▀█▀█▖    ▗█▀█▀█▖
+ █▅█▅█      █▅█▅█
+  ▀ ▀       ▀   ▀
 ```
 
-7x3 character cells. Claude's brand salmon (#D97757). The eyes are gaps at the top of the ▅ blocks—minimal and expressive.
+**Jumping** (feet tucked):
+```
+▗█▀█▀█▖
+ █▅█▅█
+
+```
+
+**Landing** (6 frames, feet tucked):
+```
+▗█▀█▀█▖
+ █▅█▅█
+```
+
+**Ducking** (2 frames, feet alternate):
+```
+▗█▀█▀█▖    ▗█▀█▀█▖
+ ▀▔▔▔▀      ▔▀▔▀▔
+```
+
+7 chars wide. Claude's brand salmon (#D97757). Eyes are gaps at top of ▅ blocks.
 
 ### Current Obstacles
 
 ```
-Small:    Tall:     Double:
-  █         █        █   █
- ███       ███      ███ ███
+Small:    Tall:     Double:    Flying:
+  █         █        █   █       \█/
+ ███       ███      ███ ███       █
   █         █        █   █
             █
 ```
 
-Dark gray (#2D2D2A). Plus-sign/cross shapes. Simple, readable at speed.
+Dark gray (#2D2D2A). Flying obstacles positioned above ground—duck to avoid.
+
+### Obstacle Introduction Curve
+
+| Score | Available Types |
+|-------|-----------------|
+| 0-499 | Small only |
+| 500-999 | Small, Tall |
+| 1000-1499 | Small, Tall, Double |
+| 1500+ | Small, Tall, Double, Flying |
 
 ---
 
@@ -56,25 +91,17 @@ Dark gray (#2D2D2A). Plus-sign/cross shapes. Simple, readable at speed.
 
 ### Current
 - **Space / Up / W / K**: Jump
+- **Down / S / J**: Toggle duck
 - **Q / Escape**: Quit
 
 ### Design Notes
 
 The Chrome dino works because [it's frictionless UX](https://norbertsflow.com/reviews/why-dino-chrome-became-more-than-just-a-no-internet-game/)—zero instructions needed. Our controls follow that:
 
-1. **One action only**: Jump. No duck (would require obstacle types that demand it).
-2. **Multiple keys**: Space is intuitive, but vi users expect K. Cover the bases.
-3. **No held-state actions**: Tap to jump, that's it. No charge jumps, no variable height.
-
-### Potential Addition: Duck
-
-If we add flying obstacles later, duck becomes necessary. Implementation notes:
-- Down / S / J to duck
-- Compress sprite vertically (3 rows instead of 4)
-- Lower hitbox height while ducking
-- Flying obstacles spawn only after score threshold (difficulty gating)
-
-**Opinion**: Don't add duck unless we add flying obstacles. Controls should match the obstacle vocabulary.
+1. **Two actions**: Jump and duck. Duck added because flying obstacles demand it.
+2. **Multiple keys**: Space is intuitive, but vi users expect K/J. Cover the bases.
+3. **Toggle duck**: Key release events are unreliable cross-platform (require kitty protocol), so duck is press-to-toggle rather than hold.
+4. **Jump exits duck**: Jumping from ducked state works naturally.
 
 ---
 
@@ -90,21 +117,23 @@ Traditional game juice relies on particles, screen shake, squash-and-stretch. Te
 But [juice is about feel, not fidelity](https://sefaertunc.medium.com/game-design-series-ii-game-juice-92f6702d4991). Here's what we *can* do:
 
 ### Currently Implemented
-- **Run cycle animation**: Feet alternate every 8 frames
+- **Run cycle animation**: Feet alternate in/out every 8 frames
+- **Duck waddle**: Feet alternate while ducking
 - **Jump pose change**: Feet tuck when airborne
+- **Landing squash**: 6 frames with feet tucked on landing
 - **Scrolling ground**: Creates sense of motion
+- **Milestone flash**: Score flashes yellow/salmon at 100, 500, 1000, etc.
 - **Collision flash**: `collision_flash` field exists (visual TBD)
 
-### Low-Hanging Fruit
+### Low-Hanging Fruit (Remaining)
 
 | Effect | Effort | Impact | How |
 |--------|--------|--------|-----|
 | Score pop | Low | Medium | Flash score brighter when +10 bonus hits |
-| Landing squash | Low | High | 2-frame squash sprite on landing |
 | Jump anticipation | Low | Medium | 1-frame crouch before launch |
 | Speed lines | Medium | Medium | Add `>` or `-` chars behind player at high speed |
-| Milestone flash | Low | High | Screen flash or color shift at 100, 500, 1000 |
 | Day/night cycle | Medium | Medium | Chrome dino does this—color scheme swap |
+| Collision visual | Low | Medium | Actually render the flash on collision |
 
 ### Squash and Stretch (Terminal Edition)
 
@@ -229,24 +258,27 @@ The game should just... keep going. Worst case, you miss some obstacles. Best ca
 
 ## Implementation Priorities
 
-If continuing development, this order:
+### Completed
+- [x] Landing squash animation (6-frame feet tuck)
+- [x] Milestone flash at 100/500/1000/etc
+- [x] Obstacle pattern introduction curve
+- [x] Duck mechanic + flying obstacles
 
-### Phase 1: Polish (Current Foundation)
-- [ ] Landing squash animation
-- [ ] Score pop on bonus
-- [ ] Milestone flash at 100/500/1000
-- [ ] Review obstacle spawn timing
+### Next Steps: Polish
+- [ ] Score pop on bonus (+10 flash)
+- [ ] Collision visual (render the flash)
+- [ ] Jump anticipation frame (1-frame crouch before launch)
+- [ ] Session high score tracking
 
-### Phase 2: Feel
-- [ ] Jump anticipation frame
+### Future: Feel
 - [ ] Stretch at jump apex
 - [ ] Speed lines at high velocity
 - [ ] Day/night palette swap
 
-### Phase 3: Depth (Optional)
-- [ ] Obstacle pattern introduction curve
-- [ ] Session high score tracking
-- [ ] Duck mechanic + flying obstacles
+### Maybe Someday
+- [ ] Persistent high score (`~/.claude/clawd_high_score`)
+- [ ] More obstacle variety
+- [ ] Sound effects (probably not—context is coding)
 
 ---
 
@@ -260,4 +292,4 @@ If continuing development, this order:
 
 ---
 
-*Document created January 2026. Reflects game state at initial hook integration milestone.*
+*Document created January 2026. Updated January 10, 2026 after duck/flying/juice pass.*
