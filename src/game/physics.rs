@@ -76,7 +76,7 @@ impl GameState {
                 if self.player.y <= 0.0 {
                     self.player.y = 0.0;
                     self.player.velocity_y = 0.0;
-                    self.player.state = PlayerState::Landing(3); // 3 frames feet tucked
+                    self.player.state = PlayerState::Landing(6); // 6 frames feet tucked
                 }
             }
             PlayerState::Landing(frames) => {
