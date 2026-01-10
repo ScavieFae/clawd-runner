@@ -4,8 +4,7 @@ use std::time::Duration;
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum GameAction {
     Jump,
-    Duck,
-    StopDuck,
+    ToggleDuck,
     Quit,
     None,
 }
@@ -15,17 +14,16 @@ pub enum GameAction {
 pub fn poll_input(timeout: Duration) -> std::io::Result<Option<GameAction>> {
     if event::poll(timeout)? {
         if let Event::Key(key) = event::read()? {
-            match key.kind {
-                KeyEventKind::Press => return Ok(Some(handle_key_press(key))),
-                KeyEventKind::Release => return Ok(Some(handle_key_release(key))),
-                _ => {}
+            // Only respond to key press, not release (release events unreliable cross-platform)
+            if key.kind == KeyEventKind::Press {
+                return Ok(Some(handle_key(key)));
             }
         }
     }
     Ok(None)
 }
 
-fn handle_key_press(key: KeyEvent) -> GameAction {
+fn handle_key(key: KeyEvent) -> GameAction {
     match key.code {
         // Jump keys
         KeyCode::Char(' ') => GameAction::Jump,
@@ -33,24 +31,16 @@ fn handle_key_press(key: KeyEvent) -> GameAction {
         KeyCode::Char('w') => GameAction::Jump,
         KeyCode::Char('k') => GameAction::Jump,
 
-        // Duck keys
-        KeyCode::Down => GameAction::Duck,
-        KeyCode::Char('s') => GameAction::Duck,
-        KeyCode::Char('j') => GameAction::Duck,
+        // Duck keys (toggle)
+        KeyCode::Down => GameAction::ToggleDuck,
+        KeyCode::Char('s') => GameAction::ToggleDuck,
+        KeyCode::Char('j') => GameAction::ToggleDuck,
 
         // Quit keys
         KeyCode::Char('q') => GameAction::Quit,
         KeyCode::Esc => GameAction::Quit,
         KeyCode::Char('c') if key.modifiers.contains(KeyModifiers::CONTROL) => GameAction::Quit,
 
-        _ => GameAction::None,
-    }
-}
-
-fn handle_key_release(key: KeyEvent) -> GameAction {
-    match key.code {
-        // Stop ducking when duck key released
-        KeyCode::Down | KeyCode::Char('s') | KeyCode::Char('j') => GameAction::StopDuck,
         _ => GameAction::None,
     }
 }

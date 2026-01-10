@@ -147,17 +147,18 @@ impl GameState {
         }
     }
 
-    /// Start ducking if on the ground
-    pub fn duck(&mut self) {
-        if self.player.state == PlayerState::Running && self.player.y <= 0.0 {
-            self.player.state = PlayerState::Ducking;
-        }
-    }
-
-    /// Stop ducking
-    pub fn stop_duck(&mut self) {
-        if self.player.state == PlayerState::Ducking {
-            self.player.state = PlayerState::Running;
+    /// Toggle ducking on/off
+    pub fn toggle_duck(&mut self) {
+        if self.player.y <= 0.0 {
+            match self.player.state {
+                PlayerState::Running | PlayerState::Landing(_) => {
+                    self.player.state = PlayerState::Ducking;
+                }
+                PlayerState::Ducking => {
+                    self.player.state = PlayerState::Running;
+                }
+                _ => {}
+            }
         }
     }
 }
