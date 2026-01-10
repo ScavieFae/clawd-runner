@@ -84,76 +84,41 @@ Using Unicode block drawing characters:
 
 ---
 
-### Recommended Game Sprite (6 chars wide, 4 lines tall)
+### Recommended Game Sprite (7 chars wide, 3 lines tall)
 
-This balances recognizability with terminal space efficiency:
-
-```
-▗█▀▀█▖
-█ ▀▀ █
-█▄▄▄▄█
- ▀  ▀ 
-```
-
-Or with ears more prominent:
+The final design—compact, expressive, with eyes created by gaps at the top of ▅ blocks:
 
 ```
-█▄  ▄█
-█ ▀▀ █
-█████ █
- ▀  ▀
+▗█▀█▀█▖
+ █▅█▅█
+  ▀ ▀
 ```
+
+Quarter-block ears (▗ ▖), eyes as negative space in the ▅ blocks, feet centered under the eyes.
 
 ---
 
 ## Animation Frames
 
-### Running Frame 1 (left foot forward)
+### Running Frame 1 (feet together)
 ```
-▗█▀▀█▖
-█ ▀▀ █
-█▄▄▄▄█
-▀    ▀
-```
-
-### Running Frame 2 (right foot forward)  
-```
-▗█▀▀█▖
-█ ▀▀ █
-█▄▄▄▄█
- ▀  ▀
+▗█▀█▀█▖
+ █▅█▅█
+  ▀ ▀
 ```
 
-### Running Frame 3 (feet together/passing)
+### Running Frame 2 (feet apart)
 ```
-▗█▀▀█▖
-█ ▀▀ █
-█▄▄▄▄█
-  ▀▀
+▗█▀█▀█▖
+ █▅█▅█
+ ▀   ▀
 ```
 
 ### Jumping (feet tucked)
 ```
-▗█▀▀█▖
-█ ▀▀ █
-█▄▄▄▄█
- ▄▄▄▄
-```
+▗█▀█▀█▖
+ █▅█▅█
 
-Or with no visible feet:
-```
-▗█▀▀█▖
-█ ▀▀ █
-▜████▛
-
-```
-
-### Landing/Crouch
-```
-▗█▀▀█▖
-█ ▀▀ █
-█▄▄▄▄█
-▄▀  ▀▄
 ```
 
 ---
@@ -236,51 +201,40 @@ Use same dark color as eyes (#2D2D2A) for obstacles to create contrast.
 
 **For the game, use this minimal set:**
 
-### CLAWD_IDLE (6x4)
+### CLAWD_RUN_1 (7x3) - feet together
 ```
-▗█▀▀█▖
-█ ▀▀ █
-█▄▄▄▄█
- ▀  ▀ 
-```
-
-### CLAWD_RUN_1 (6x4)
-```
-▗█▀▀█▖
-█ ▀▀ █
-█▄▄▄▄█
-▀   ▀ 
+▗█▀█▀█▖
+ █▅█▅█
+  ▀ ▀
 ```
 
-### CLAWD_RUN_2 (6x4)
+### CLAWD_RUN_2 (7x3) - feet apart
 ```
-▗█▀▀█▖
-█ ▀▀ █
-█▄▄▄▄█
+▗█▀█▀█▖
+ █▅█▅█
  ▀   ▀
 ```
 
-### CLAWD_JUMP (6x4)
+### CLAWD_JUMP (7x3)
 ```
-▗█▀▀█▖
-█ ▀▀ █
-█▄▄▄▄█
-      
+▗█▀█▀█▖
+ █▅█▅█
+
 ```
 
 ### OBSTACLE_SMALL (3x3)
 ```
- █ 
+ █
 ███
- █ 
+ █
 ```
 
 ### OBSTACLE_TALL (3x4)
 ```
- █ 
+ █
 ███
- █ 
- █ 
+ █
+ █
 ```
 
 ---
@@ -311,10 +265,9 @@ Run this in your terminal to preview:
 
 ```bash
 echo -e "\033[38;2;217;119;87m"
-echo " ▗█▀▀█▖"
-echo " █ ▀▀ █"
-echo " █▄▄▄▄█"
-echo "  ▀  ▀ "
+echo "▗█▀█▀█▖"
+echo " █▅█▅█"
+echo "  ▀ ▀"
 echo -e "\033[0m"
 ```
 
