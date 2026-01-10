@@ -60,8 +60,6 @@ Replace `/path/to/clawd-runner` with the actual path to your built binary.
 
 ## How it works
 
-The game renders inline in your terminal (no alternate screen takeover). When used as a PreCompact hook, it launches in a new Terminal window so you have something to do while Claude compacts context.
-
-The game watches for the compaction to complete and exits automatically, or you can quit manually.
+When used as a PreCompact hook, the game launches in a new Terminal window so you have something to do while Claude compacts context. It watches for compaction to complete and exits automatically, or you can quit manually.
 
 See [DESIGN.md](DESIGN.md) for the full design document.
