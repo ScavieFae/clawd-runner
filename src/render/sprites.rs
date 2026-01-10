@@ -37,13 +37,13 @@ impl ClaudeSprite {
 
     /// Ducking frame 1 - feet out (positions 2 and 6)
     pub const DUCKING_1: &'static [&'static str] = &[
-        "▗█▛█▜█▖",
+        "▗█▀█▀█▖",
         " ▀▔▔▔▀ ",
     ];
 
     /// Ducking frame 2 - feet in (positions 3 and 5)
     pub const DUCKING_2: &'static [&'static str] = &[
-        "▗█▛█▜█▖",
+        "▗█▀█▀█▖",
         " ▔▀▔▀▔ ",
     ];
 
