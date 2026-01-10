@@ -76,16 +76,19 @@ impl GameState {
                 if self.player.y <= 0.0 {
                     self.player.y = 0.0;
                     self.player.velocity_y = 0.0;
-                    self.player.state = PlayerState::Landing(6); // 6 frames of squash
-                }
-            }
-            PlayerState::Landing(frames) => {
-                if frames > 1 {
-                    self.player.state = PlayerState::Landing(frames - 1);
-                } else {
+                    // TODO: Re-enable landing squash during polish
+                    // self.player.state = PlayerState::Landing(6);
                     self.player.state = PlayerState::Running;
                 }
             }
+            // TODO: Re-enable during polish
+            // PlayerState::Landing(frames) => {
+            //     if frames > 1 {
+            //         self.player.state = PlayerState::Landing(frames - 1);
+            //     } else {
+            //         self.player.state = PlayerState::Running;
+            //     }
+            // }
             _ => {}
         }
     }
