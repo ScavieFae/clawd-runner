@@ -47,16 +47,16 @@ impl ClaudeSprite {
         " ▔▀▔▀▔ ",
     ];
 
-    /// Landing squash - wider and shorter
+    /// Landing squash - feet tucked (2 lines)
     pub const LANDING: &'static [&'static str] = &[
-        "▗█▀▀▀█▖",
-        "█▅█▅█▅█",
-        " ▀   ▀ ",
+        "▗█▀█▀█▖",
+        " █▅█▅█ ",
     ];
 
     pub const WIDTH: u16 = 7;
     pub const HEIGHT: u16 = 3;
     pub const DUCK_HEIGHT: u16 = 2;
+    pub const LANDING_HEIGHT: u16 = 2;
 }
 
 /// Obstacle types with their sprites

@@ -30,7 +30,7 @@ impl<'a> GameScene<'a> {
                 };
                 (s, ClaudeSprite::DUCK_HEIGHT)
             }
-            PlayerState::Landing(_) => (ClaudeSprite::LANDING, ClaudeSprite::HEIGHT),
+            PlayerState::Landing(_) => (ClaudeSprite::LANDING, ClaudeSprite::LANDING_HEIGHT),
             PlayerState::Running => {
                 // Animate feet while running
                 let s = if self.game.frame_count % 16 < 8 {
