@@ -21,7 +21,15 @@ impl<'a> GameScene<'a> {
     fn render_player(&self, area: Rect, buf: &mut Buffer) {
         let (sprite, sprite_height) = match self.game.player.state {
             PlayerState::Jumping => (ClaudeSprite::BOOSTING, ClaudeSprite::HEIGHT),
-            PlayerState::Ducking => (ClaudeSprite::DUCKING, ClaudeSprite::DUCK_HEIGHT),
+            PlayerState::Ducking => {
+                // Animate feet while duck-running
+                let s = if self.game.frame_count % 16 < 8 {
+                    ClaudeSprite::DUCKING_1
+                } else {
+                    ClaudeSprite::DUCKING_2
+                };
+                (s, ClaudeSprite::DUCK_HEIGHT)
+            }
             PlayerState::Landing(_) => (ClaudeSprite::LANDING, ClaudeSprite::HEIGHT),
             PlayerState::Running => {
                 // Animate feet while running

@@ -35,10 +35,16 @@ impl ClaudeSprite {
         "       ",
     ];
 
-    /// Ducking - compressed to 2 lines, eyes looking up
-    pub const DUCKING: &'static [&'static str] = &[
+    /// Ducking frame 1 - feet together
+    pub const DUCKING_1: &'static [&'static str] = &[
         "▗█▛█▜█▖",
         " ▀▔▔▔▀ ",
+    ];
+
+    /// Ducking frame 2 - feet apart
+    pub const DUCKING_2: &'static [&'static str] = &[
+        "▗█▛█▜█▖",
+        "▀ ▔▔▔ ▀",
     ];
 
     /// Landing squash - wider and shorter
