@@ -7,7 +7,7 @@ use clap::Parser;
 use crossterm::{
     cursor,
     execute,
-    terminal::{self, EnterAlternateScreen, LeaveAlternateScreen},
+    terminal::{self},
 };
 use ratatui::{backend::CrosstermBackend, Terminal};
 use serde::Deserialize;
@@ -71,13 +71,32 @@ fn main() -> io::Result<()> {
         read_transcript_from_stdin()
     };
 
-    // Set up terminal
+    // Set up terminal for inline rendering
     terminal::enable_raw_mode()?;
     let mut stdout = io::stdout();
-    execute!(stdout, EnterAlternateScreen, cursor::Hide)?;
+
+    // Print newlines to make room for the game area, then move cursor back up
+    const GAME_HEIGHT: u16 = 8;
+    for _ in 0..GAME_HEIGHT {
+        println!();
+    }
+    execute!(stdout, cursor::MoveUp(GAME_HEIGHT), cursor::Hide)?;
+
+    // Save the starting position
+    let (start_col, start_row) = cursor::position()?;
 
     let backend = CrosstermBackend::new(stdout);
-    let mut terminal = Terminal::new(backend)?;
+    let mut terminal = Terminal::with_options(
+        backend,
+        ratatui::TerminalOptions {
+            viewport: ratatui::Viewport::Fixed(ratatui::layout::Rect::new(
+                start_col,
+                start_row,
+                terminal::size()?.0,
+                GAME_HEIGHT,
+            )),
+        },
+    )?;
 
     // Get terminal size
     let size = terminal.size()?;
@@ -151,11 +170,11 @@ fn main() -> io::Result<()> {
         }
     }
 
-    // Restore terminal
+    // Restore terminal - move cursor below game area and show it
     terminal::disable_raw_mode()?;
     execute!(
         terminal.backend_mut(),
-        LeaveAlternateScreen,
+        cursor::MoveTo(0, start_row + GAME_HEIGHT),
         cursor::Show
     )?;
 
