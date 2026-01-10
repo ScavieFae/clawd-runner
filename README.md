@@ -54,7 +54,8 @@ Replace `/path/to/clawd-runner` with the actual path to your built binary.
 
 ## Controls
 
-- **Space / Up / W**: Jump
+- **Space / Up / W / K**: Jump
+- **Down / S / J**: Duck (to avoid flying obstacles)
 - **Q / Escape**: Quit
 
 ## How it works

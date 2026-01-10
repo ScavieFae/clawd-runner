@@ -40,24 +40,53 @@ impl GameState {
         // Update score (+1 per frame survived)
         self.score += 1;
 
+        // Check for milestones (100, 500, 1000, 2000, 3000, ...)
+        self.check_milestone();
+
         // Decrease collision flash
         if self.collision_flash > 0 {
             self.collision_flash -= 1;
         }
+
+        // Decrease milestone flash
+        if self.milestone_flash > 0 {
+            self.milestone_flash -= 1;
+        }
+    }
+
+    fn check_milestone(&mut self) {
+        let milestones = [100, 500, 1000, 2000, 3000, 5000, 10000];
+        for &milestone in &milestones {
+            if self.score >= milestone && self.last_milestone < milestone {
+                self.last_milestone = milestone;
+                self.milestone_flash = 20; // Flash for 20 frames
+                break;
+            }
+        }
     }
 
     fn update_player(&mut self) {
-        if self.player.state == PlayerState::Jumping {
-            // Apply gravity (subtract to pull velocity down)
-            self.player.velocity_y -= GRAVITY;
-            self.player.y += self.player.velocity_y;
+        match self.player.state {
+            PlayerState::Jumping => {
+                // Apply gravity (subtract to pull velocity down)
+                self.player.velocity_y -= GRAVITY;
+                self.player.y += self.player.velocity_y;
 
-            // Check if landed (y <= 0 means back on ground)
-            if self.player.y <= 0.0 {
-                self.player.y = 0.0;
-                self.player.velocity_y = 0.0;
-                self.player.state = PlayerState::Running;
+                // Check if landed (y <= 0 means back on ground)
+                if self.player.y <= 0.0 {
+                    self.player.y = 0.0;
+                    self.player.velocity_y = 0.0;
+                    self.player.state = PlayerState::Landing(6); // 6 frames of squash
+                }
             }
+            PlayerState::Landing(frames) => {
+                if frames > 1 {
+                    self.player.state = PlayerState::Landing(frames - 1);
+                } else {
+                    self.player.state = PlayerState::Running;
+                }
+            }
+            _ => {}
         }
     }
 
@@ -88,7 +117,10 @@ impl GameState {
         for obstacle in &self.obstacles {
             let obs_left = obstacle.x + 1.0; // Slightly inset hitbox
             let obs_right = obs_left + obstacle.obstacle_type.hitbox_width() as f32;
-            let obs_bottom = 0.0;
+
+            // Flying obstacles are positioned above ground
+            let fly_height = obstacle.obstacle_type.fly_height() as f32;
+            let obs_bottom = fly_height;
             let obs_top = obs_bottom + obstacle.obstacle_type.hitbox_height() as f32;
 
             // AABB collision check
@@ -105,9 +137,27 @@ impl GameState {
 
     /// Initiate a jump if on the ground
     pub fn jump(&mut self) {
-        if self.player.state == PlayerState::Running && self.player.y <= 0.0 {
+        let can_jump = matches!(
+            self.player.state,
+            PlayerState::Running | PlayerState::Ducking | PlayerState::Landing(_)
+        );
+        if can_jump && self.player.y <= 0.0 {
             self.player.velocity_y = JUMP_VELOCITY;
             self.player.state = PlayerState::Jumping;
+        }
+    }
+
+    /// Start ducking if on the ground
+    pub fn duck(&mut self) {
+        if self.player.state == PlayerState::Running && self.player.y <= 0.0 {
+            self.player.state = PlayerState::Ducking;
+        }
+    }
+
+    /// Stop ducking
+    pub fn stop_duck(&mut self) {
+        if self.player.state == PlayerState::Ducking {
+            self.player.state = PlayerState::Running;
         }
     }
 }

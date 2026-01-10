@@ -4,6 +4,8 @@ use crate::render::sprites::{ClaudeSprite, ObstacleType};
 pub enum PlayerState {
     Running,
     Jumping,
+    Ducking,
+    Landing(u8), // Frames remaining in landing squash
 }
 
 #[derive(Debug)]
@@ -32,7 +34,11 @@ impl Player {
     }
 
     pub fn hitbox_height(&self) -> f32 {
-        ClaudeSprite::HEIGHT as f32 - 1.0
+        match self.state {
+            PlayerState::Ducking => ClaudeSprite::DUCK_HEIGHT as f32 - 0.5,
+            PlayerState::Landing(_) => ClaudeSprite::HEIGHT as f32 - 1.0,
+            _ => ClaudeSprite::HEIGHT as f32 - 1.0,
+        }
     }
 }
 
@@ -62,7 +68,9 @@ pub struct GameState {
     pub scroll_offset: u32,
     pub speed: f32,
     pub should_quit: bool,
-    pub collision_flash: u8, // Frames remaining for collision flash effect
+    pub collision_flash: u8,  // Frames remaining for collision flash effect
+    pub milestone_flash: u8,  // Frames remaining for milestone celebration
+    pub last_milestone: u32,  // Last milestone hit (100, 500, 1000, etc)
     pub terminal_width: u16,
 }
 
@@ -77,6 +85,8 @@ impl Default for GameState {
             speed: 1.0,
             should_quit: false,
             collision_flash: 0,
+            milestone_flash: 0,
+            last_milestone: 0,
             terminal_width: 80,
         }
     }

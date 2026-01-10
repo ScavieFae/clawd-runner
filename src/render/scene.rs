@@ -19,15 +19,18 @@ impl<'a> GameScene<'a> {
     }
 
     fn render_player(&self, area: Rect, buf: &mut Buffer) {
-        let sprite = match self.game.player.state {
-            PlayerState::Jumping => ClaudeSprite::BOOSTING,
+        let (sprite, sprite_height) = match self.game.player.state {
+            PlayerState::Jumping => (ClaudeSprite::BOOSTING, ClaudeSprite::HEIGHT),
+            PlayerState::Ducking => (ClaudeSprite::DUCKING, ClaudeSprite::DUCK_HEIGHT),
+            PlayerState::Landing(_) => (ClaudeSprite::LANDING, ClaudeSprite::HEIGHT),
             PlayerState::Running => {
-                // Animate tentacles while floating
-                if self.game.frame_count % 16 < 8 {
+                // Animate feet while running
+                let s = if self.game.frame_count % 16 < 8 {
                     ClaudeSprite::FLOATING_1
                 } else {
                     ClaudeSprite::FLOATING_2
-                }
+                };
+                (s, ClaudeSprite::HEIGHT)
             }
         };
 
@@ -35,7 +38,7 @@ impl<'a> GameScene<'a> {
         let player_x = self.game.player.x as u16;
         let ground_y = area.height.saturating_sub(2); // Ground is 1 row, status is 1 row
         let player_bottom = ground_y;
-        let player_y = player_bottom.saturating_sub(ClaudeSprite::HEIGHT).saturating_sub(self.game.player.y as u16);
+        let player_y = player_bottom.saturating_sub(sprite_height).saturating_sub(self.game.player.y as u16);
 
         for (row_idx, line) in sprite.iter().enumerate() {
             let y = player_y + row_idx as u16;
@@ -58,7 +61,10 @@ impl<'a> GameScene<'a> {
         for obstacle in &self.game.obstacles {
             let sprite = obstacle.obstacle_type.sprite();
             let height = obstacle.obstacle_type.height();
-            let obs_bottom = ground_y;
+            let fly_height = obstacle.obstacle_type.fly_height();
+
+            // Flying obstacles are positioned above ground
+            let obs_bottom = ground_y.saturating_sub(fly_height);
             let obs_top = obs_bottom.saturating_sub(height);
 
             for (row_idx, line) in sprite.iter().enumerate() {
@@ -77,6 +83,8 @@ impl<'a> GameScene<'a> {
     }
 
     fn render_status_bar(&self, area: Rect, buf: &mut Buffer) {
+        use ratatui::style::Color;
+
         if area.height == 0 {
             return;
         }
@@ -97,13 +105,24 @@ impl<'a> GameScene<'a> {
             }
         }
 
-        // Right side: score
+        // Right side: score (flash on milestone)
+        let score_style = if self.game.milestone_flash > 0 {
+            // Alternate colors for flash effect
+            if self.game.milestone_flash % 4 < 2 {
+                Style::default().fg(Color::Yellow)
+            } else {
+                Style::default().fg(CLAUDE_COLOR)
+            }
+        } else {
+            Style::default()
+        };
+
         let score_text = format!("score: {}", self.game.score);
         let score_start = area.width.saturating_sub(score_text.len() as u16);
         for (i, ch) in score_text.chars().enumerate() {
             let x = score_start + i as u16;
             if x < area.width {
-                buf[(area.x + x, area.y + y)].set_char(ch);
+                buf[(area.x + x, area.y + y)].set_char(ch).set_style(score_style);
             }
         }
     }

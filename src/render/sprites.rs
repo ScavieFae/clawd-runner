@@ -35,8 +35,22 @@ impl ClaudeSprite {
         "       ",
     ];
 
+    /// Ducking - compressed to 2 lines
+    pub const DUCKING: &'static [&'static str] = &[
+        "▗█▅█▅█▖",
+        "  ▀ ▀  ",
+    ];
+
+    /// Landing squash - wider and shorter
+    pub const LANDING: &'static [&'static str] = &[
+        "▗█▀▀▀█▖",
+        "█▅█▅█▅█",
+        " ▀   ▀ ",
+    ];
+
     pub const WIDTH: u16 = 7;
     pub const HEIGHT: u16 = 3;
+    pub const DUCK_HEIGHT: u16 = 2;
 }
 
 /// Obstacle types with their sprites
@@ -45,6 +59,7 @@ pub enum ObstacleType {
     Small,
     Tall,
     Double,
+    Flying,
 }
 
 impl ObstacleType {
@@ -66,6 +81,10 @@ impl ObstacleType {
                 "███ ███",
                 " █   █ ",
             ],
+            ObstacleType::Flying => &[
+                "\\█/",
+                " █ ",
+            ],
         }
     }
 
@@ -74,6 +93,7 @@ impl ObstacleType {
             ObstacleType::Small => 3,
             ObstacleType::Tall => 3,
             ObstacleType::Double => 7,
+            ObstacleType::Flying => 3,
         }
     }
 
@@ -82,6 +102,7 @@ impl ObstacleType {
             ObstacleType::Small => 3,
             ObstacleType::Tall => 4,
             ObstacleType::Double => 3,
+            ObstacleType::Flying => 2,
         }
     }
 
@@ -91,6 +112,7 @@ impl ObstacleType {
             ObstacleType::Small => 1,
             ObstacleType::Tall => 1,
             ObstacleType::Double => 5,
+            ObstacleType::Flying => 1,
         }
     }
 
@@ -99,6 +121,20 @@ impl ObstacleType {
             ObstacleType::Small => 2,
             ObstacleType::Tall => 3,
             ObstacleType::Double => 2,
+            ObstacleType::Flying => 1,
+        }
+    }
+
+    /// Returns true if this obstacle flies above ground
+    pub fn is_flying(&self) -> bool {
+        matches!(self, ObstacleType::Flying)
+    }
+
+    /// Height above ground for flying obstacles
+    pub fn fly_height(&self) -> u16 {
+        match self {
+            ObstacleType::Flying => 2, // Positioned so ducking clears it
+            _ => 0,
         }
     }
 }

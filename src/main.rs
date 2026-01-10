@@ -140,6 +140,8 @@ fn main() -> io::Result<()> {
         if let Some(action) = poll_input(input_timeout)? {
             match action {
                 GameAction::Jump => game.jump(),
+                GameAction::Duck => game.duck(),
+                GameAction::StopDuck => game.stop_duck(),
                 GameAction::Quit => game.should_quit = true,
                 GameAction::None => {}
             }
