@@ -27,7 +27,7 @@ The game exists to make waiting pleasant, not to demand attention. It should fee
 | Scoring | Done | +1/frame + 10 bonus per obstacle cleared |
 | Run animation | Done | 2-frame cycle, feet in/out |
 | Jump animation | Done | Feet tuck in air |
-| Landing squash | Done | 6-frame feet-tucked on landing |
+| Landing squash | Done | 3-frame feet-tucked on landing |
 | Duck mechanic | Done | Toggle duck, 2-frame waddle animation |
 | Flying obstacles | Done | Appear at 1500+ score, duck to avoid |
 | Milestone flash | Done | Score flashes at 100, 500, 1000, etc. |
@@ -50,7 +50,7 @@ The game exists to make waiting pleasant, not to demand attention. It should fee
 
 ```
 
-**Landing** (6 frames, feet tucked):
+**Landing** (3 frames, feet tucked):
 ```
 ▗█▀█▀█▖
  █▅█▅█
@@ -74,16 +74,16 @@ Small:    Tall:     Double:    Flying:
             █
 ```
 
-Dark gray (#2D2D2A). Flying obstacles positioned above ground—duck to avoid.
+Light gray (#B4B4AA). Flying obstacles positioned above ground—duck to avoid.
 
 ### Obstacle Introduction Curve
 
 | Score | Available Types |
 |-------|-----------------|
-| 0-499 | Small only |
-| 500-999 | Small, Tall |
-| 1000-1499 | Small, Tall, Double |
-| 1500+ | Small, Tall, Double, Flying |
+| 0-299 | Small only |
+| 300-599 | Small, Tall |
+| 600-899 | Small, Tall, Double |
+| 900+ | Small, Tall, Double, Flying |
 
 ---
 
@@ -120,7 +120,7 @@ But [juice is about feel, not fidelity](https://sefaertunc.medium.com/game-desig
 - **Run cycle animation**: Feet alternate in/out every 8 frames
 - **Duck waddle**: Feet alternate while ducking
 - **Jump pose change**: Feet tuck when airborne
-- **Landing squash**: 6 frames with feet tucked on landing
+- **Landing squash**: 3 frames with feet tucked on landing
 - **Scrolling ground**: Creates sense of motion
 - **Milestone flash**: Score flashes yellow/salmon at 100, 500, 1000, etc.
 - **Collision flash**: `collision_flash` field exists (visual TBD)
@@ -259,7 +259,7 @@ The game should just... keep going. Worst case, you miss some obstacles. Best ca
 ## Implementation Priorities
 
 ### Completed
-- [x] Landing squash animation (6-frame feet tuck)
+- [x] Landing squash animation (3-frame feet tuck)
 - [x] Milestone flash at 100/500/1000/etc
 - [x] Obstacle pattern introduction curve
 - [x] Duck mechanic + flying obstacles

@@ -23,11 +23,12 @@ impl TranscriptWatcher {
     }
 
     /// Check if the file has changed since we started watching
+    /// Detects any size change (compaction typically shrinks the file)
     pub fn file_changed(&self) -> std::io::Result<bool> {
         let metadata = fs::metadata(&self.path)?;
         let current_size = metadata.len();
         let current_mtime = metadata.modified()?;
 
-        Ok(current_size > self.initial_size || current_mtime > self.initial_mtime)
+        Ok(current_size != self.initial_size || current_mtime > self.initial_mtime)
     }
 }

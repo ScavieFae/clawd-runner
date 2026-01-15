@@ -81,7 +81,7 @@ impl GameState {
                 if self.player.y <= 0.0 {
                     self.player.y = 0.0;
                     self.player.velocity_y = 0.0;
-                    self.player.state = PlayerState::Landing(6); // 6 frames feet tucked
+                    self.player.state = PlayerState::Landing(3); // 3 frames feet tucked
                 }
             }
             PlayerState::Landing(frames) => {
@@ -102,11 +102,16 @@ impl GameState {
         for obstacle in &mut self.obstacles {
             obstacle.x -= scroll_speed;
 
-            // Check if player passed this obstacle (for bonus scoring)
-            if !obstacle.passed && (obstacle.x + obstacle.obstacle_type.width() as f32) < self.player.x {
+            // Check if player cleared this obstacle (bonus when collision no longer possible)
+            // Only award bonus if player didn't collide with it
+            let obs_hitbox_right = obstacle.x + 1.0 + obstacle.obstacle_type.hitbox_width() as f32;
+            let player_hitbox_left = self.player.x + 1.0;
+            if !obstacle.passed && obs_hitbox_right < player_hitbox_left {
                 obstacle.passed = true;
-                self.score += 10; // Bonus for clearing obstacle
-                self.score_pop = 8; // Flash score for 8 frames
+                if !obstacle.collided {
+                    self.score += 10; // Bonus for clearing obstacle
+                    self.score_pop = 8; // Flash score for 8 frames
+                }
             }
         }
 
@@ -120,7 +125,7 @@ impl GameState {
         let player_bottom = self.player.y;
         let player_top = player_bottom + self.player.hitbox_height();
 
-        for obstacle in &self.obstacles {
+        for obstacle in &mut self.obstacles {
             let obs_left = obstacle.x + 1.0; // Slightly inset hitbox
             let obs_right = obs_left + obstacle.obstacle_type.hitbox_width() as f32;
 
@@ -135,8 +140,8 @@ impl GameState {
 
             if x_overlap && y_overlap {
                 // Collision! Flash but don't die (spec says no death state)
-                self.collision_flash = 10;
-                // Could add a small score penalty here if desired
+                self.collision_flash = 12; // ~400ms flash at 30fps
+                obstacle.collided = true; // Prevents bonus for this obstacle
             }
         }
     }

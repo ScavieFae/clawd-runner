@@ -8,9 +8,9 @@ const MIN_SPAWN_INTERVAL: u64 = 60;
 const MAX_SPAWN_INTERVAL: u64 = 120;
 
 /// Score thresholds for introducing new obstacle types
-const TALL_THRESHOLD: u32 = 500;
-const DOUBLE_THRESHOLD: u32 = 1000;
-const FLYING_THRESHOLD: u32 = 1500;
+const TALL_THRESHOLD: u32 = 300;
+const DOUBLE_THRESHOLD: u32 = 600;
+const FLYING_THRESHOLD: u32 = 900;
 
 impl GameState {
     /// Possibly spawn a new obstacle

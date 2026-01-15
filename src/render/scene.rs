@@ -1,11 +1,11 @@
 use ratatui::{
     buffer::Buffer,
     layout::Rect,
-    style::Style,
+    style::{Color, Style},
     widgets::Widget,
 };
 use crate::game::state::{GameState, PlayerState};
-use super::sprites::{ClaudeSprite, CLAUDE_COLOR, OBSTACLE_COLOR, COLLISION_COLOR};
+use super::sprites::{ClaudeSprite, CLAUDE_COLOR, OBSTACLE_COLOR};
 use super::ground::Ground;
 
 /// The complete game scene widget
@@ -42,9 +42,14 @@ impl<'a> GameScene<'a> {
             }
         };
 
-        // Flash red on collision, otherwise normal color
+        // Strobe on collision for high visibility
         let color = if self.game.collision_flash > 0 {
-            COLLISION_COLOR
+            // Alternate white/magenta every 2 frames for dramatic effect
+            if (self.game.collision_flash / 2) % 2 == 0 {
+                Color::Rgb(255, 255, 255) // White
+            } else {
+                Color::Rgb(255, 50, 200)  // Hot magenta
+            }
         } else {
             CLAUDE_COLOR
         };
@@ -97,22 +102,19 @@ impl<'a> GameScene<'a> {
     }
 
     fn render_status_bar(&self, area: Rect, buf: &mut Buffer) {
-        use ratatui::style::Color;
-
         if area.height == 0 {
             return;
         }
 
         let y = area.height - 1;
 
-        // Left side: "compacting..." with animated dots
-        let dots = match (self.game.frame_count / 15) % 4 {
-            0 => ".",
-            1 => "..",
-            2 => "...",
-            _ => "",
-        };
-        let left_text = format!("compacting{}", dots);
+        // Left side: debug counters
+        let left_text = format!(
+            "cf:{} obs:{} py:{}",
+            self.game.collision_flash,
+            self.game.obstacles.len(),
+            self.game.player.y as i32
+        );
         for (i, ch) in left_text.chars().enumerate() {
             if (i as u16) < area.width {
                 buf[(area.x + i as u16, area.y + y)].set_char(ch);
@@ -121,12 +123,16 @@ impl<'a> GameScene<'a> {
 
         // Right side: score (flash on milestone or bonus)
         let score_style = if self.game.milestone_flash > 0 {
-            // Alternate colors for milestone flash
-            if self.game.milestone_flash % 4 < 2 {
-                Style::default().fg(Color::Yellow)
-            } else {
-                Style::default().fg(CLAUDE_COLOR)
-            }
+            // Mario star strobe: cycle through warm celebration colors
+            let phase = (self.game.milestone_flash / 2) % 5;
+            let color = match phase {
+                0 => Color::Rgb(255, 255, 100), // Bright yellow
+                1 => Color::Rgb(255, 200, 50),  // Gold
+                2 => Color::Rgb(255, 150, 0),   // Orange
+                3 => Color::Rgb(255, 255, 255), // White flash
+                _ => Color::Rgb(255, 220, 100), // Warm yellow
+            };
+            Style::default().fg(color)
         } else if self.game.score_pop > 0 {
             // Bright green pop for +10 bonus
             Style::default().fg(Color::Rgb(100, 255, 100))

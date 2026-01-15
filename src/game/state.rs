@@ -46,7 +46,8 @@ impl Player {
 pub struct Obstacle {
     pub x: f32,
     pub obstacle_type: ObstacleType,
-    pub passed: bool, // For scoring when player clears it
+    pub passed: bool,    // For scoring when player clears it
+    pub collided: bool,  // No bonus if player hit this one
 }
 
 impl Obstacle {
@@ -55,6 +56,7 @@ impl Obstacle {
             x,
             obstacle_type,
             passed: false,
+            collided: false,
         }
     }
 }
