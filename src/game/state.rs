@@ -71,6 +71,7 @@ pub struct GameState {
     pub collision_flash: u8,  // Frames remaining for collision flash effect
     pub milestone_flash: u8,  // Frames remaining for milestone celebration
     pub last_milestone: u32,  // Last milestone hit (100, 500, 1000, etc)
+    pub score_pop: u8,        // Frames remaining for +10 bonus flash
     pub terminal_width: u16,
 }
 
@@ -87,6 +88,7 @@ impl Default for GameState {
             collision_flash: 0,
             milestone_flash: 0,
             last_milestone: 0,
+            score_pop: 0,
             terminal_width: 80,
         }
     }

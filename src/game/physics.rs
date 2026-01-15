@@ -52,6 +52,11 @@ impl GameState {
         if self.milestone_flash > 0 {
             self.milestone_flash -= 1;
         }
+
+        // Decrease score pop
+        if self.score_pop > 0 {
+            self.score_pop -= 1;
+        }
     }
 
     fn check_milestone(&mut self) {
@@ -101,6 +106,7 @@ impl GameState {
             if !obstacle.passed && (obstacle.x + obstacle.obstacle_type.width() as f32) < self.player.x {
                 obstacle.passed = true;
                 self.score += 10; // Bonus for clearing obstacle
+                self.score_pop = 8; // Flash score for 8 frames
             }
         }
 

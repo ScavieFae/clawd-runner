@@ -3,8 +3,11 @@ use ratatui::style::Color;
 /// Claude brand salmon/peach color
 pub const CLAUDE_COLOR: Color = Color::Rgb(217, 119, 87); // #D97757
 
-/// Dark gray for eyes and obstacles
-pub const DARK_COLOR: Color = Color::Rgb(45, 45, 42); // #2D2D2A
+/// Bright obstacle color (visible on dark backgrounds)
+pub const OBSTACLE_COLOR: Color = Color::Rgb(180, 180, 170); // #B4B4AA - light gray
+
+/// Flash color for collision effect
+pub const COLLISION_COLOR: Color = Color::Rgb(255, 100, 100); // Bright red flash
 
 /// Medium gray for ground
 pub const GROUND_COLOR: Color = Color::Rgb(138, 138, 122); // #8A8A7A

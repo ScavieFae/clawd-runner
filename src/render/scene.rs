@@ -5,7 +5,7 @@ use ratatui::{
     widgets::Widget,
 };
 use crate::game::state::{GameState, PlayerState};
-use super::sprites::{ClaudeSprite, CLAUDE_COLOR, DARK_COLOR};
+use super::sprites::{ClaudeSprite, CLAUDE_COLOR, OBSTACLE_COLOR, COLLISION_COLOR};
 use super::ground::Ground;
 
 /// The complete game scene widget
@@ -42,7 +42,13 @@ impl<'a> GameScene<'a> {
             }
         };
 
-        let style = Style::default().fg(CLAUDE_COLOR);
+        // Flash red on collision, otherwise normal color
+        let color = if self.game.collision_flash > 0 {
+            COLLISION_COLOR
+        } else {
+            CLAUDE_COLOR
+        };
+        let style = Style::default().fg(color);
         let player_x = self.game.player.x as u16;
         let ground_y = area.height.saturating_sub(2); // Ground is 1 row, status is 1 row
         let player_bottom = ground_y;
@@ -63,7 +69,7 @@ impl<'a> GameScene<'a> {
     }
 
     fn render_obstacles(&self, area: Rect, buf: &mut Buffer) {
-        let style = Style::default().fg(DARK_COLOR);
+        let style = Style::default().fg(OBSTACLE_COLOR);
         let ground_y = area.height.saturating_sub(2);
 
         for obstacle in &self.game.obstacles {
@@ -113,14 +119,17 @@ impl<'a> GameScene<'a> {
             }
         }
 
-        // Right side: score (flash on milestone)
+        // Right side: score (flash on milestone or bonus)
         let score_style = if self.game.milestone_flash > 0 {
-            // Alternate colors for flash effect
+            // Alternate colors for milestone flash
             if self.game.milestone_flash % 4 < 2 {
                 Style::default().fg(Color::Yellow)
             } else {
                 Style::default().fg(CLAUDE_COLOR)
             }
+        } else if self.game.score_pop > 0 {
+            // Bright green pop for +10 bonus
+            Style::default().fg(Color::Rgb(100, 255, 100))
         } else {
             Style::default()
         };
