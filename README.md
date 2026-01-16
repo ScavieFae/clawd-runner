@@ -37,11 +37,11 @@ Add to `~/.claude/settings.json`:
   "hooks": {
     "PreCompact": [
       {
-        "matcher": "manual",
+        "matcher": "auto",
         "hooks": [
           {
             "type": "command",
-            "command": "osascript -e 'tell app \"Terminal\" to do script \"/path/to/clawd-runner --demo\"'"
+            "command": "osascript -e 'tell app \"Terminal\" to do script \"$HOME/claude-projects/clawd-runner/target/release/clawd-runner --demo\"'"
           }
         ]
       }
@@ -50,7 +50,7 @@ Add to `~/.claude/settings.json`:
 }
 ```
 
-Replace `/path/to/clawd-runner` with the actual path to your built binary.
+Adjust the path if your clone lives somewhere other than `~/claude-projects/clawd-runner`.
 
 ## Controls
 
