@@ -62,7 +62,7 @@ The game exists to make waiting pleasant, not to demand attention. It should fee
  ▀▔▔▔▀      ▔▀▔▀▔
 ```
 
-7 chars wide. Claude's brand salmon (#D97757). Eyes are gaps at top of ▅ blocks.
+7 chars wide. Claude's brand salmon (indexed 209). Eyes are gaps at top of ▅ blocks.
 
 ### Current Obstacles
 
@@ -74,7 +74,7 @@ Small:    Tall:     Double:    Flying:
             █
 ```
 
-Light gray (#B4B4AA). Flying obstacles positioned above ground—duck to avoid.
+Light gray (indexed 250). Flying obstacles positioned above ground—duck to avoid.
 
 ### Obstacle Introduction Curve
 
@@ -110,7 +110,7 @@ The Chrome dino works because [it's frictionless UX](https://norbertsflow.com/re
 Traditional game juice relies on particles, screen shake, squash-and-stretch. Terminal rendering limits us to:
 
 - Character-based "pixels"
-- Limited color (though we have true color support)
+- Limited color (256-color indexed palette for universal terminal support)
 - No sub-cell positioning
 - No transparency/blending
 
@@ -122,18 +122,17 @@ But [juice is about feel, not fidelity](https://sefaertunc.medium.com/game-desig
 - **Jump pose change**: Feet tuck when airborne
 - **Landing squash**: 3 frames with feet tucked on landing
 - **Scrolling ground**: Creates sense of motion
-- **Milestone flash**: Score flashes yellow/salmon at 100, 500, 1000, etc.
-- **Collision flash**: `collision_flash` field exists (visual TBD)
+- **Milestone flash**: Score strobes warm colors (yellow/gold/orange/white) at 100, 500, 1000, etc.
+- **Collision flash**: Player strobes white/magenta on hit
+- **Score pop**: Score flashes green on +10 bonus
 
 ### Low-Hanging Fruit (Remaining)
 
 | Effect | Effort | Impact | How |
 |--------|--------|--------|-----|
-| Score pop | Low | Medium | Flash score brighter when +10 bonus hits |
 | Jump anticipation | Low | Medium | 1-frame crouch before launch |
 | Speed lines | Medium | Medium | Add `>` or `-` chars behind player at high speed |
 | Day/night cycle | Medium | Medium | Chrome dino does this—color scheme swap |
-| Collision visual | Low | Medium | Actually render the flash on collision |
 
 ### Squash and Stretch (Terminal Edition)
 
@@ -265,8 +264,8 @@ The game should just... keep going. Worst case, you miss some obstacles. Best ca
 - [x] Duck mechanic + flying obstacles
 
 ### Next Steps: Polish
-- [ ] Score pop on bonus (+10 flash)
-- [ ] Collision visual (render the flash)
+- [x] Score pop on bonus (+10 flash)
+- [x] Collision visual (white/magenta strobe)
 - [ ] Jump anticipation frame (1-frame crouch before launch)
 - [ ] Session high score tracking
 
@@ -292,4 +291,4 @@ The game should just... keep going. Worst case, you miss some obstacles. Best ca
 
 ---
 
-*Document created January 2026. Updated January 10, 2026 after duck/flying/juice pass.*
+*Document created January 2026. Updated January 18, 2026—score pop, collision flash, 256-color palette.*
