@@ -1,16 +1,19 @@
 use ratatui::style::Color;
 
 /// Claude brand salmon/peach color
-pub const CLAUDE_COLOR: Color = Color::Rgb(217, 119, 87); // #D97757
+/// Using 256-color indexed palette for compatibility (209 ≈ salmon)
+pub const CLAUDE_COLOR: Color = Color::Indexed(209);
 
 /// Bright obstacle color (visible on dark backgrounds)
-pub const OBSTACLE_COLOR: Color = Color::Rgb(180, 180, 170); // #B4B4AA - light gray
+/// 256-color grayscale 250 ≈ light gray
+pub const OBSTACLE_COLOR: Color = Color::Indexed(250);
 
 /// Flash color for collision effect
-pub const COLLISION_COLOR: Color = Color::Rgb(255, 100, 100); // Bright red flash
+pub const COLLISION_COLOR: Color = Color::Indexed(196); // Bright red
 
 /// Medium gray for ground
-pub const GROUND_COLOR: Color = Color::Rgb(138, 138, 122); // #8A8A7A
+/// 256-color grayscale 245 ≈ medium gray
+pub const GROUND_COLOR: Color = Color::Indexed(245);
 
 /// Clawd sprite frames - the Claude Code mascot
 /// 7 chars wide, 3 lines tall

@@ -46,9 +46,9 @@ impl<'a> GameScene<'a> {
         let color = if self.game.collision_flash > 0 {
             // Alternate white/magenta every 2 frames for dramatic effect
             if (self.game.collision_flash / 2) % 2 == 0 {
-                Color::Rgb(255, 255, 255) // White
+                Color::Indexed(231) // White
             } else {
-                Color::Rgb(255, 50, 200)  // Hot magenta
+                Color::Indexed(199) // Hot magenta
             }
         } else {
             CLAUDE_COLOR
@@ -126,16 +126,16 @@ impl<'a> GameScene<'a> {
             // Mario star strobe: cycle through warm celebration colors
             let phase = (self.game.milestone_flash / 2) % 5;
             let color = match phase {
-                0 => Color::Rgb(255, 255, 100), // Bright yellow
-                1 => Color::Rgb(255, 200, 50),  // Gold
-                2 => Color::Rgb(255, 150, 0),   // Orange
-                3 => Color::Rgb(255, 255, 255), // White flash
-                _ => Color::Rgb(255, 220, 100), // Warm yellow
+                0 => Color::Indexed(227), // Bright yellow
+                1 => Color::Indexed(220), // Gold
+                2 => Color::Indexed(208), // Orange
+                3 => Color::Indexed(231), // White flash
+                _ => Color::Indexed(222), // Warm yellow
             };
             Style::default().fg(color)
         } else if self.game.score_pop > 0 {
             // Bright green pop for +10 bonus
-            Style::default().fg(Color::Rgb(100, 255, 100))
+            Style::default().fg(Color::Indexed(119)) // Bright green
         } else {
             Style::default()
         };
